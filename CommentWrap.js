@@ -1,5 +1,3 @@
-
-
 makeCollapsableObserverWrapper = (mutationList) => {
    for (record of mutationList) {
       if (record.type != 'childList') {
@@ -14,13 +12,10 @@ makeCollapsableObserverWrapper = (mutationList) => {
 }
 
 rootCommentOnClick = (event) => {
-   comments = event.currentTarget.parentElement.querySelectorAll('.comment-sub')
+   comments = event.currentTarget.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.comment-sub')
+   event.currentTarget.style.transform = event.currentTarget.style.transform == '' ? 'rotate(-90deg)' : ''
    for (const subComment of comments) {
-         if (subComment.style.maxHeight == "0px") {
-            subComment.style.maxHeight = subComment.scrollHeight + 'px';
-         } else {
-            subComment.style.maxHeight = '0px';
-         }
+      subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
    }
 }
 
@@ -32,9 +27,22 @@ makeCollapsable = (commentThread) => {
    }
 
    var root = commentThread.querySelectorAll('.comment-wrapper')[0];
-   if (root) {
-      root.addEventListener('click', rootCommentOnClick, false)
+   if (root && comments.length > 0) {
+      makeCollapsableRoot(root)
    }
+}
+
+makeCollapsableRoot = (elem) => {
+   const oldProfileLink = elem.querySelector(".comment-avatar")
+
+   const arrowUrl = chrome.runtime.getURL("res/arrow.png")
+   const newProfileLink = `<div class="collapse-wrapper">${oldProfileLink.outerHTML}<img class="comment-avatar collapse-button" src="${arrowUrl}" /></div>`
+   oldProfileLink.remove()
+   art = elem.querySelector(".comment")
+   art.insertAdjacentHTML("afterbegin", newProfileLink)
+   button = elem.querySelector(".collapse-button")
+   button.addEventListener('click', rootCommentOnClick)
+
 }
 
 window.onload = (event) => {
