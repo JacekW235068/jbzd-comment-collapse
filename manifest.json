@@ -5,17 +5,15 @@
     "version": "1.0",
   
     "description": "Allows for hiding comment threads on jbzd.",
-  
-    "icons": {
-      "48": "res/icon.png"
-    },
-  
+
     "content_scripts": [
       {
         "matches": ["https://*.jbzd.com.pl/*"],
         "js": ["CommentWrap.js"],
         "css": ["CommentWrap.css"]
       }
+    ],
+    "web_accessible_resources": [
+      "res/arrow.png"
     ]
-  
 }
