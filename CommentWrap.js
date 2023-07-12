@@ -11,25 +11,25 @@ makeCollapsableObserverWrapper = (mutationList) => {
    }
 }
 
-rootCommentOnClick = (event) => {
-   comments = event.currentTarget.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.comment-sub')
-   event.currentTarget.style.transform = event.currentTarget.style.transform == '' ? 'rotate(-90deg)' : ''
-   for (const subComment of comments) {
-      subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
-   }
-}
-
 makeCollapsable = (commentThread) => {
    var comments = commentThread.querySelectorAll('.comment-sub');
 
    for (const subComment of comments) {
-      subComment.style.maxHeight = subComment.scrollHeight + 'px';
+      makeCollapsableSub(subComment)
    }
 
    var root = commentThread.querySelectorAll('.comment-wrapper')[0];
    if (root && comments.length > 0) {
       makeCollapsableRoot(root)
    }
+}
+
+makeCollapsableSub = (elem) => {
+   elem.style.maxHeight = elem.scrollHeight + 'px';
+   article = elem.querySelector(".comment")
+   article.addEventListener('click',
+      (event) => { if (event.offsetX < 5) collapseThread(event) }
+   )
 }
 
 makeCollapsableRoot = (elem) => {
@@ -41,9 +41,21 @@ makeCollapsableRoot = (elem) => {
    art = elem.querySelector(".comment")
    art.insertAdjacentHTML("afterbegin", newProfileLink)
    button = elem.querySelector(".collapse-button")
-   button.addEventListener('click', rootCommentOnClick)
-
+   button.addEventListener('click', collapseThread)
 }
+
+collapseThread = (event) => {
+   thread = event.currentTarget
+   while (thread && thread.parentElement.className != "comments")
+      thread = thread.parentElement
+   button = thread.querySelector(".collapse-button")
+   button.style.transform = button.style.transform == '' ? 'rotate(-90deg)' : ''
+   comments = thread.querySelectorAll('.comment-sub')
+   for (const subComment of comments) {
+      subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
+   }
+}
+
 
 window.onload = (event) => {
    const config = { attributes: true, childList: true, subtree: true };
