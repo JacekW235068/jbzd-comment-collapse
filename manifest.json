@@ -8,7 +8,7 @@
 
     "content_scripts": [
       {
-        "matches": ["https://*.jbzd.com.pl/*"],
+        "matches": ["https://*.jbzd.com.pl/obr/*"],
         "js": ["CommentWrap.js"],
         "css": ["CommentWrap.css"]
       }
