@@ -1,14 +1,39 @@
 makeCollapsableObserverWrapper = (mutationList) => {
    for (record of mutationList) {
-      if (record.type != 'childList') {
-         return
-      }
-      for (const child of record.addedNodes) {
-         if (child.nodeName == "DIV") {
-            makeCollapsable(child)
+      if (record.type == 'childList') {
+         for (const child of record.addedNodes) {
+            if (child.nodeName == "DIV") {
+               if (child.querySelector('div.comment-wrapper')) {
+                  makeCollapsable(child) // New thread
+               } else if (child.className == "article-action-tip") {
+                  popup(record.target) // Comment author pop-up
+               }
+            }
+         }
+         for (const child of record.removedNodes) {
+            if (child.nodeName == "DIV") {
+               if (child.className == 'article-action-tip') {
+                  // Removed children don't have parents
+                  popdown(record.target) // Comment author pop-up
+               }
+            }
          }
       }
    }
+}
+
+popup = (element) => {
+   while (element && element.className != "comment-wrapper comment-sub")
+      element = element.parentElement
+   if (!element) return
+   element.style.overflow = 'visible';
+}
+
+popdown = (element) => {
+   while (element && element.className != "comment-wrapper comment-sub")
+      element = element.parentElement
+   if (!element) return
+   element.style.overflow = '';
 }
 
 makeCollapsable = (commentThread) => {
