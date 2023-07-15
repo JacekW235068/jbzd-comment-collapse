@@ -28,8 +28,13 @@ makeCollapsableSub = (elem) => {
    elem.style.maxHeight = elem.scrollHeight + 'px';
    article = elem.querySelector(".comment")
    article.addEventListener('click',
-      (event) => { if (event.offsetX < 5) collapseThread(event) }
+      collapseThreadFromSub
    )
+}
+
+collapseThreadFromSub = (event) => {
+   if (event.offsetX < 5 && event.currentTarget == event.target)
+      collapseThread(event)
 }
 
 makeCollapsableRoot = (elem) => {
