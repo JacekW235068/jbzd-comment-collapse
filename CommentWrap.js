@@ -18,6 +18,12 @@ makeCollapsableObserverWrapper = (mutationList) => {
                }
             }
          }
+      } else if (record.type == 'attributes') {
+         if (record.target.className == "comment-dropdown active") {
+            popup(record.target)
+         } else if (record.target.className == "comment-dropdown") {
+            popdown(record.target)
+         }
       }
    }
 }
