@@ -3,7 +3,9 @@ makeCollapsableObserverWrapper = (mutationList) => {
       if (record.type == 'childList') {
          for (const child of record.addedNodes) {
             if (child.nodeName == "DIV") {
-               if (child.querySelector('div.comment-wrapper')) {
+               if (child.firstChild.className == "comment-wrapper comment-sub") {
+                  newSubComment(child) // New sub-comment
+               } else if (child.firstChild.className == "comment-wrapper") {
                   makeCollapsable(child) // New thread
                } else if (child.className == "article-action-tip") {
                   popup(record.target) // Comment author pop-up
@@ -39,6 +41,17 @@ popdown = (element) => {
    if (element)
       element.style.overflow = '';
 }
+
+newSubComment = (subcom) => {
+   makeCollapsableSub(subcom.firstChild)
+   root = findParent(subcom, (e) => {return e.parentElement.className == "comments"})
+   root = root.querySelectorAll('.comment-wrapper')[0];
+   button = root.querySelector(".collapse-button")
+   if (! button) {
+      makeCollapsableRoot(root)
+   }
+}
+
 
 makeCollapsable = (commentThread) => {
    var comments = commentThread.querySelectorAll('.comment-sub');
