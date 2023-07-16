@@ -29,17 +29,15 @@ makeCollapsableObserverWrapper = (mutationList) => {
 }
 
 popup = (element) => {
-   while (element && element.className != "comment-wrapper comment-sub")
-      element = element.parentElement
-   if (!element) return
-   element.style.overflow = 'visible';
+   element = findParent(element, (e) => {return e.className == "comment-wrapper comment-sub"})
+   if (element)
+      element.style.overflow = 'visible';
 }
 
 popdown = (element) => {
-   while (element && element.className != "comment-wrapper comment-sub")
-      element = element.parentElement
-   if (!element) return
-   element.style.overflow = '';
+   element = findParent(element, (e) => {return e.className == "comment-wrapper comment-sub"})
+   if (element)
+      element.style.overflow = '';
 }
 
 makeCollapsable = (commentThread) => {
@@ -81,9 +79,7 @@ makeCollapsableRoot = (elem) => {
 }
 
 collapseThread = (event) => {
-   thread = event.currentTarget
-   while (thread && thread.parentElement.className != "comments")
-      thread = thread.parentElement
+   thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
    button = thread.querySelector(".collapse-button")
    button.style.transform = button.style.transform == '' ? 'rotate(-90deg)' : ''
    comments = thread.querySelectorAll('.comment-sub')
@@ -92,6 +88,11 @@ collapseThread = (event) => {
    }
 }
 
+findParent = (startElement, stopCondition) => {
+   while (startElement && !stopCondition(startElement))
+      startElement = startElement.parentElement
+   return startElement
+}
 
 window.onload = (event) => {
    const config = { attributes: true, childList: true, subtree: true };
