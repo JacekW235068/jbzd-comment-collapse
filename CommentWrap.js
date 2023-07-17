@@ -10,6 +10,12 @@ makeCollapsableObserverWrapper = (mutationList) => {
                } else if (child.className == "article-action-tip") {
                   popup(record.target) // Comment author pop-up
                }
+            } else if (child.nodeName == "FORM") {
+               if (child.className == 'comment-form') {
+                  adjustHeightFor(record.target) // Comment response pop-up
+               }
+            } else if (child.nodeName == "#comment" && record.target.nodeName == "DIV") { 
+               adjustHeightFor(record.target) // Comment response hidden
             }
          }
          for (const child of record.removedNodes) {
@@ -28,6 +34,16 @@ makeCollapsableObserverWrapper = (mutationList) => {
          }
       }
    }
+}
+
+adjustHeightFor = (element) => {
+   while (element && element.className != "comment-wrapper comment-sub")
+      element = element.parentElement
+   if (!element) return
+   element.style.transition = "max-height 0s ease 0s"
+   element.style.maxHeight = element.scrollHeight + 'px';
+   element.offsetHeight; // https://stackoverflow.com/a/34726346 not even mad at this point
+   element.style.transition = ""
 }
 
 popup = (element) => {
