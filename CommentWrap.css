@@ -1,11 +1,15 @@
+:root {
+    --animation-speed: 0.08s;
+    --animation-type: linear;
+
+}
+
 .comment-sub {
-    transition: max-height .5s ease-in-out;
+    transition: max-height var(--animation-speed) var(--animation-type);
     overflow: hidden;
 }
 
 .collapse-button {
     margin-top: 13px;
-    -webkit-transition: -webkit-transform .5s ease-in-out;
-    -ms-transition: -ms-transform .5s ease-in-out;
-    transition: transform .5s ease-in-out;
+    transition: transform var(--animation-speed) var(--animation-type);
 }

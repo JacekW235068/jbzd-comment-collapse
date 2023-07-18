@@ -107,13 +107,14 @@ makeCollapsableRoot = (elem) => {
    button.addEventListener('click', collapseThread)
 }
 
-collapseThread = (event) => {
+collapseThread = async (event) => {
    thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
    button = thread.querySelector(".collapse-button")
    button.style.transform = button.style.transform == '' ? 'rotate(-90deg)' : ''
    comments = thread.querySelectorAll('.comment-sub')
    for (const subComment of comments) {
       subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
+      await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
    }
 }
 
