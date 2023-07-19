@@ -109,12 +109,37 @@ makeCollapsableRoot = (elem) => {
 
 collapseThread = async (event) => {
    thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
-   button = thread.querySelector(".collapse-button")
-   button.style.transform = button.style.transform == '' ? 'rotate(-90deg)' : ''
    comments = thread.querySelectorAll('.comment-sub')
+   collapseRoot(thread.querySelector(".comment-wrapper"))
    for (const subComment of comments) {
       subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
       await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
+   }
+}
+
+collapseRoot = (root) => {
+   button = root.querySelector(".collapse-button")
+   button.style.transform = button.style.transform == '' ? 'rotate(-90deg)' : ''
+
+   content = root.querySelector(".read-more")
+   footer = root.querySelector(".comment-reply")
+   image = root.querySelector(".comment-media")
+   if (content.style.maxHeight == "5.8em") {
+      if(content.parentElement.querySelector(".read-more-button")) {
+         content.style.maxHeight = "300px"
+      } else {
+         content.style.maxHeight = "none"
+      }
+      content.style.fontSize = ""
+      content.style.color = ""
+      if (image) image.style.maxHeight = image.scrollHeight + 'px';
+      if (footer) footer.style.maxHeight = footer.scrollHeight + 'px';
+   } else {
+      if (footer) footer.style.maxHeight = '0px';
+      if (image) image.style.maxHeight = '0px';
+      content.style.maxHeight = "5.8em"
+      content.style.fontSize = "12px"
+      content.style.color = "#777777"
    }
 }
 
