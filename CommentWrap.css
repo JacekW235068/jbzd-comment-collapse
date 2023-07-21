@@ -13,3 +13,16 @@
     margin-top: 13px;
     transition: transform var(--animation-speed) var(--animation-type);
 }
+
+.read-more {
+    transition: all var(--animation-speed) var(--animation-type);
+    overflow: hidden;
+}
+.comment-reply {
+    transition: max-height var(--animation-speed) var(--animation-type);
+    overflow: hidden;
+}
+.comment-media {
+    transition: max-height var(--animation-speed) var(--animation-type);
+    overflow: hidden;
+}

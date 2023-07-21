@@ -105,6 +105,11 @@ makeCollapsableRoot = (elem) => {
    art.insertAdjacentHTML("afterbegin", newProfileLink)
    button = elem.querySelector(".collapse-button")
    button.addEventListener('click', collapseThread)
+
+   image = elem.querySelector(".comment-media")      
+   if (image)image.style.maxHeight = image.scrollHeight + 'px';
+   footer = elem.querySelector(".comment-reply")      
+   if (footer) footer.style.maxHeight = footer.scrollHeight + 'px';
 }
 
 collapseThread = async (event) => {
@@ -134,12 +139,13 @@ collapseRoot = (root) => {
       content.style.color = ""
       if (image) image.style.maxHeight = image.scrollHeight + 'px';
       if (footer) footer.style.maxHeight = footer.scrollHeight + 'px';
+      root.style.filter = ""
    } else {
       if (footer) footer.style.maxHeight = '0px';
       if (image) image.style.maxHeight = '0px';
       content.style.maxHeight = "5.8em"
       content.style.fontSize = "12px"
-      content.style.color = "#777777"
+      root.style.filter = "brightness(0.7)"
    }
 }
 
