@@ -14,6 +14,7 @@
       }
     ],
     "web_accessible_resources": [
-      "res/arrow.png"
+      "res/arrow.png",
+      "res/arrow_hover.png"
     ]
 }

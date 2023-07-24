@@ -10,8 +10,14 @@
 }
 
 .collapse-button {
-    margin-top: 13px;
+    margin-top: 5px;
     transition: transform var(--animation-speed) var(--animation-type);
+    aspect-ratio: 1/1;
+    background-image: url('chrome-extension://__MSG_@@extension_id__/res/arrow.png');
+    background-size: contain;
+}
+.collapse-button:hover {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/res/arrow_hover.png');
 }
 
 .read-more {
