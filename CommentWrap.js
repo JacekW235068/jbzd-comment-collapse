@@ -98,8 +98,7 @@ collapseThreadFromSub = (event) => {
 makeCollapsableRoot = (elem) => {
    const oldProfileLink = elem.querySelector(".comment-avatar")
 
-   const arrowUrl = chrome.runtime.getURL("res/arrow.png")
-   const newProfileLink = `<div class="collapse-wrapper">${oldProfileLink.outerHTML}<img class="comment-avatar collapse-button" src="${arrowUrl}" /></div>`
+   const newProfileLink = `<div class="collapse-wrapper">${oldProfileLink.outerHTML}<div class="comment-avatar collapse-button"/></div>`
    oldProfileLink.remove()
    art = elem.querySelector(".comment")
    art.insertAdjacentHTML("afterbegin", newProfileLink)
