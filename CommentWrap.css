@@ -1,7 +1,6 @@
 :root {
     --animation-speed: 0.08s;
     --animation-type: linear;
-
 }
 
 .comment-sub {
@@ -16,8 +15,19 @@
     background-image: url('chrome-extension://__MSG_@@extension_id__/res/arrow.png');
     background-size: contain;
 }
+
 .collapse-button:hover {
     background-image: url('chrome-extension://__MSG_@@extension_id__/res/arrow_hover.png');
+}
+
+@supports (-moz-appearance:none) {
+    .collapse-button {
+        background-image: url('/res/arrow.png');
+    }
+
+    .collapse-button:hover {
+        background-image: url('/res/arrow_hover.png');
+    }
 }
 
 .read-more {
