@@ -1,16 +1,9 @@
-:root {
-    --animation-speed: 0.08s;
-    --animation-type: linear;
-}
-
 .comment-sub {
-    transition: max-height var(--animation-speed) var(--animation-type);
     overflow: hidden;
 }
 
 .collapse-button {
     margin-top: 5px;
-    transition: transform var(--animation-speed) var(--animation-type);
     aspect-ratio: 1/1;
     background-image: url('chrome-extension://__MSG_@@extension_id__/res/arrow.png');
     background-size: contain;
@@ -31,14 +24,11 @@
 }
 
 .read-more {
-    transition: all var(--animation-speed) var(--animation-type);
     overflow: hidden;
 }
 .comment-reply {
-    transition: max-height var(--animation-speed) var(--animation-type);
     overflow: hidden;
 }
 .comment-media {
-    transition: max-height var(--animation-speed) var(--animation-type);
     overflow: hidden;
 }

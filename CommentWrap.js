@@ -1,3 +1,9 @@
+OPTIONS = {
+   fade: false,
+   collapseText: true,
+   animationSpeed: "0.01"
+}
+
 makeCollapsableObserverWrapper = (mutationList) => {
    for (record of mutationList) {
       if (record.type == 'childList') {
@@ -43,7 +49,7 @@ adjustHeightFor = (element) => {
    element.style.transition = "max-height 0s ease 0s"
    element.style.maxHeight = element.scrollHeight + 'px';
    element.offsetHeight; // https://stackoverflow.com/a/34726346 not even mad at this point
-   element.style.transition = ""
+   element.style.transition = `max-height ${OPTIONS.animationSpeed}s ease 0s`
 }
 
 popup = (element) => {
@@ -84,6 +90,7 @@ makeCollapsable = (commentThread) => {
 
 makeCollapsableSub = (elem) => {
    elem.style.maxHeight = elem.scrollHeight + 'px';
+   elem.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
    article = elem.querySelector(".comment")
    article.addEventListener('click',
       collapseThreadFromSub
@@ -97,18 +104,27 @@ collapseThreadFromSub = (event) => {
 
 makeCollapsableRoot = (elem) => {
    const oldProfileLink = elem.querySelector(".comment-avatar")
-
+   elem.style.transition = `filter ${OPTIONS.animationSpeed}s linear`
+   content = elem.querySelector(".read-more")
+   content.style.transition = `all ${OPTIONS.animationSpeed}s linear`
    const newProfileLink = `<div class="collapse-wrapper">${oldProfileLink.outerHTML}<div class="comment-avatar collapse-button"/></div>`
    oldProfileLink.remove()
    art = elem.querySelector(".comment")
    art.insertAdjacentHTML("afterbegin", newProfileLink)
    button = elem.querySelector(".collapse-button")
+   button.style.transition = `transform ${OPTIONS.animationSpeed}s linear`
    button.addEventListener('click', collapseThread)
 
    image = elem.querySelector(".comment-media")      
-   if (image)image.style.maxHeight = image.scrollHeight + 'px';
+   if (image) {
+      image.style.maxHeight = image.scrollHeight + 'px'; 
+      image.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
+   }
    footer = elem.querySelector(".comment-reply")      
-   if (footer) footer.style.maxHeight = footer.scrollHeight + 'px';
+   if (footer) {
+      footer.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
+      footer.style.maxHeight = footer.scrollHeight + 'px';
+   }
 }
 
 collapseThread = async (event) => {
@@ -128,7 +144,7 @@ collapseRoot = (root) => {
    content = root.querySelector(".read-more")
    footer = root.querySelector(".comment-reply")
    image = root.querySelector(".comment-media")
-   if (content.style.maxHeight == "5.8em") {
+   if (button.style.transform == "") {
       if(content.parentElement.querySelector(".read-more-button")) {
          content.style.maxHeight = "300px"
       } else {
@@ -142,9 +158,11 @@ collapseRoot = (root) => {
    } else {
       if (footer) footer.style.maxHeight = '0px';
       if (image) image.style.maxHeight = '0px';
-      content.style.maxHeight = "5.8em"
-      content.style.fontSize = "12px"
-      root.style.filter = "brightness(0.7)"
+      if (OPTIONS.collapseText) { 
+         content.style.maxHeight = "5.8em"
+         content.style.fontSize = "12px"
+      }
+      if (OPTIONS.fade) root.style.filter = "brightness(0.7)"
    }
 }
 
