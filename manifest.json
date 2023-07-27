@@ -16,5 +16,10 @@
     "web_accessible_resources": [
       "res/arrow.png",
       "res/arrow_hover.png"
-    ]
+    ],
+    "options_ui": {
+      "page": "options.html",
+      "browser_style": true
+    },
+    "permissions": ["storage"]
 }
