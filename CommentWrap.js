@@ -1,8 +1,17 @@
 OPTIONS = {
+}
+if (typeof browser === "undefined") {
+   browser = chrome;
+}
+
+browser.storage.sync.get({
    fade: false,
    collapseText: true,
-   animationSpeed: "0.01"
-}
+   animationSpeed: '8'
+}, function(items) {
+   items.animationSpeed = parseFloat(items.animationSpeed)/100.0
+   OPTIONS = items
+})
 
 makeCollapsableObserverWrapper = (mutationList) => {
    for (record of mutationList) {
