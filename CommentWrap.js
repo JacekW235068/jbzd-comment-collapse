@@ -43,9 +43,11 @@ makeCollapsableObserverWrapper = (mutationList) => {
          }
       } else if (record.type == 'attributes') {
          if (record.target.className == "comment-dropdown active") {
-            popup(record.target)
+            popup(record.target) // comment edit popups
          } else if (record.target.className == "comment-dropdown") {
             popdown(record.target)
+         } else if (record.target.className == "read-more-content") {
+            adjustHeightFor(record.target)
          }
       }
    }
