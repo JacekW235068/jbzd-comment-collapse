@@ -13,6 +13,9 @@ browser.storage.sync.get({
    OPTIONS = items
 })
 
+// can't use scrollheight for elements displayed in flex
+HEIGHTS = {}
+
 makeCollapsableObserverWrapper = (mutationList) => {
    for (record of mutationList) {
       if (record.type == 'childList') {
@@ -135,6 +138,7 @@ makeCollapsableRoot = (elem) => {
    if (footer) {
       footer.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
       footer.style.maxHeight = footer.scrollHeight + 'px';
+      HEIGHTS.footer = footer.scrollHeight + 'px';
    }
 }
 
@@ -164,7 +168,7 @@ collapseRoot = (root) => {
       content.style.fontSize = ""
       content.style.color = ""
       if (image) image.style.maxHeight = image.scrollHeight + 'px';
-      if (footer) footer.style.maxHeight = footer.scrollHeight + 'px';
+      if (footer) footer.style.maxHeight =  HEIGHTS.footer
       root.style.filter = ""
    } else {
       if (footer) footer.style.maxHeight = '0px';
