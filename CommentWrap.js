@@ -104,7 +104,8 @@ makeCollapsableSub = (elem) => {
 
 collapseThreadFromSub = (event) => {
    if (event.offsetX < 5 && event.currentTarget == event.target)
-      collapseThread(event)
+      thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
+      collapseThread(thread)
 }
 
 makeCollapsableRoot = (elem) => {
@@ -118,7 +119,12 @@ makeCollapsableRoot = (elem) => {
    art.insertAdjacentHTML("afterbegin", newProfileLink)
    button = elem.querySelector(".collapse-button")
    button.style.transition = `transform ${OPTIONS.animationSpeed}ms linear`
-   button.addEventListener('click', collapseThread)
+   button.addEventListener('click', (event)=> {
+      thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
+      c = thread.getAttribute('collapsed')
+      if (c != null) expandThread(thread) 
+      else collapseThread(thread)
+   })
 
    image = elem.querySelector(".comment-media")      
    if (image) {
@@ -133,43 +139,61 @@ makeCollapsableRoot = (elem) => {
    }
 }
 
-collapseThread = async (event) => {
-   thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
+collapseThread = async (thread) => {
+   thread.setAttribute('collapsed','')
    comments = thread.querySelectorAll('.comment-sub')
    collapseRoot(thread.querySelector(".comment-wrapper"))
    for (const subComment of comments) {
-      subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
+      subComment.style.maxHeight = '0px'
       if (OPTIONS.animationSpeed > 0 ) await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
+   }
+}
+
+expandThread = async (thread) => {
+   thread.removeAttribute('collapsed')
+   comments = thread.querySelectorAll('.comment-sub')
+   expandRoot(thread.querySelector(".comment-wrapper"))
+   for (const subComment of comments) {
+      await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
+      subComment.style.maxHeight = subComment.scrollHeight + 'px'
    }
 }
 
 collapseRoot = (root) => {
    button = root.querySelector(".collapse-button")
-   button.style.transform = button.style.transform == '' ? 'rotate(-90deg)' : ''
+   button.style.transform = 'rotate(-90deg)'
 
    content = root.querySelector(".read-more")
    footer = root.querySelector(".comment-reply")
    image = root.querySelector(".comment-media")
-   if (button.style.transform == "") {
-      if(content.parentElement.querySelector(".read-more-button")) {
-         content.style.maxHeight = "300px"
-      } else {
-         content.style.maxHeight = "none"
-      }
-      content.style.fontSize = ""
-      content.style.color = ""
-      if (image) image.style.maxHeight = image.scrollHeight + 'px';
-      if (footer) footer.style.maxHeight =  HEIGHTS.footer
-      root.style.filter = ""
-   } else {
-      if (footer) footer.style.maxHeight = '0px';
-      if (image) image.style.maxHeight = '0px';
-      if (OPTIONS.collapseText) { 
-         content.style.maxHeight = "5.8em"
-         content.style.fontSize = "12px"
-      }
-      if (OPTIONS.fade) root.style.filter = "brightness(0.7)"
+
+   footer.style.maxHeight = '0px';
+   if (image) image.style.maxHeight = '0px';
+   if (OPTIONS.collapseText) { 
+      content.style.maxHeight = "5.8em"
+      content.style.fontSize = "12px"
    }
+   if (OPTIONS.fade) root.style.filter = "brightness(0.7)"
+}
+
+expandRoot = (root) => {
+   button = root.querySelector(".collapse-button")
+   button.style.transform = ''
+
+   content = root.querySelector(".read-more")
+   footer = root.querySelector(".comment-reply")
+   image = root.querySelector(".comment-media")
+
+   if(content.parentElement.querySelector(".read-more-button")) {
+      content.style.maxHeight = "300px"
+   } else {
+      content.style.maxHeight = "none"
+   }
+   content.style.fontSize = ""
+   content.style.color = ""
+   if (image) image.style.maxHeight = image.scrollHeight + 'px';
+   footer.style.maxHeight = footer.scrollHeight + 'px';
+   root.style.filter = ""
 }
 
 findParent = (startElement, stopCondition) => {
