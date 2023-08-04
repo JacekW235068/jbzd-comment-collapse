@@ -4,15 +4,6 @@ if (typeof browser === "undefined") {
    browser = chrome;
 }
 
-browser.storage.sync.get({
-   fade: false,
-   collapseText: true,
-   animationSpeed: '8'
-}, function(items) {
-   items.animationSpeed = parseFloat(items.animationSpeed)/100.0
-   OPTIONS = items
-})
-
 // can't use scrollheight for elements displayed in flex
 HEIGHTS = {}
 
@@ -187,7 +178,14 @@ findParent = (startElement, stopCondition) => {
    return startElement
 }
 
-window.onload = (event) => {
+window.onload = async (event) => {
+   OPTIONS = await browser.storage.sync.get({
+      fade: false,
+      collapseText: true,
+      animationSpeed: '8'
+   })
+   OPTIONS.animationSpeed = parseFloat(OPTIONS.animationSpeed)/100.0
+
    const config = { attributes: true, childList: true, subtree: true };
    const observer = new MutationObserver(makeCollapsableObserverWrapper);
    const targetNode = document.getElementsByClassName("comments")[0]
