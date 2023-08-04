@@ -54,7 +54,7 @@ adjustHeightFor = (element) => {
    element.style.transition = "max-height 0s ease 0s"
    element.style.maxHeight = element.scrollHeight + 'px';
    element.offsetHeight; // https://stackoverflow.com/a/34726346 not even mad at this point
-   element.style.transition = `max-height ${OPTIONS.animationSpeed}s ease 0s`
+   element.style.transition = `max-height ${OPTIONS.animationSpeed}ms ease 0s`
 }
 
 popup = (element) => {
@@ -95,7 +95,7 @@ makeCollapsable = (commentThread) => {
 
 makeCollapsableSub = (elem) => {
    elem.style.maxHeight = elem.scrollHeight + 'px';
-   elem.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
+   elem.style.transition = `max-height ${OPTIONS.animationSpeed}ms linear`
    article = elem.querySelector(".comment")
    article.addEventListener('click',
       collapseThreadFromSub
@@ -109,25 +109,25 @@ collapseThreadFromSub = (event) => {
 
 makeCollapsableRoot = (elem) => {
    const oldProfileLink = elem.querySelector(".comment-avatar")
-   elem.style.transition = `filter ${OPTIONS.animationSpeed}s linear`
+   elem.style.transition = `filter ${OPTIONS.animationSpeed}ms linear`
    content = elem.querySelector(".read-more")
-   content.style.transition = `all ${OPTIONS.animationSpeed}s linear`
+   content.style.transition = `all ${OPTIONS.animationSpeed}ms linear`
    const newProfileLink = `<div class="collapse-wrapper">${oldProfileLink.outerHTML}<div class="comment-avatar collapse-button"/></div>`
    oldProfileLink.remove()
    art = elem.querySelector(".comment")
    art.insertAdjacentHTML("afterbegin", newProfileLink)
    button = elem.querySelector(".collapse-button")
-   button.style.transition = `transform ${OPTIONS.animationSpeed}s linear`
+   button.style.transition = `transform ${OPTIONS.animationSpeed}ms linear`
    button.addEventListener('click', collapseThread)
 
    image = elem.querySelector(".comment-media")      
    if (image) {
       image.style.maxHeight = image.scrollHeight + 'px'; 
-      image.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
+      image.style.transition = `max-height ${OPTIONS.animationSpeed}ms linear`
    }
    footer = elem.querySelector(".comment-reply")      
    if (footer) {
-      footer.style.transition = `max-height ${OPTIONS.animationSpeed}s linear`
+      footer.style.transition = `max-height ${OPTIONS.animationSpeed}ms linear`
       footer.style.maxHeight = footer.scrollHeight + 'px';
       HEIGHTS.footer = footer.scrollHeight + 'px';
    }
@@ -139,7 +139,7 @@ collapseThread = async (event) => {
    collapseRoot(thread.querySelector(".comment-wrapper"))
    for (const subComment of comments) {
       subComment.style.maxHeight = subComment.style.maxHeight == '0px' ? subComment.scrollHeight + 'px' : '0px'
-      await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
+      if (OPTIONS.animationSpeed > 0 ) await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
    }
 }
 
@@ -182,9 +182,8 @@ window.onload = async (event) => {
    OPTIONS = await browser.storage.sync.get({
       fade: false,
       collapseText: true,
-      animationSpeed: '8'
+      animationSpeed: '81'
    })
-   OPTIONS.animationSpeed = parseFloat(OPTIONS.animationSpeed)/100.0
 
    const config = { attributes: true, childList: true, subtree: true };
    const observer = new MutationObserver(makeCollapsableObserverWrapper);
