@@ -12,7 +12,7 @@ function saveOptions(e) {
       fade: false,
       collapseText: true,
       animationSpeed: '8'
-   }, function(items) {
+   }).then( (items) => {
       document.getElementById('fade').checked = items.fade;
       document.getElementById('collapse').checked = items.collapseText;
       e = document.getElementById("speed");
