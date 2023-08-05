@@ -1,13 +1,14 @@
 OPTIONS = {
 }
-if (typeof browser === "undefined") {
-   browser = chrome
-}
 
 // can't use scrollheight for elements displayed in flex
 HEIGHTS = {}
 
-window.onload = async (event) => {
+if (typeof browser === "undefined") {
+   browser = chrome
+}
+
+window.onload = async () => {
    OPTIONS = await browser.storage.sync.get({
       fade: false,
       collapseText: true,
@@ -25,38 +26,38 @@ window.onload = async (event) => {
    }
 }
 
-makeCollapsable = (commentThread) => {
-   var comments = commentThread.querySelectorAll('.comment-sub')
+const makeCollapsable = (commentThread) => {
+   const comments = commentThread.querySelectorAll('.comment-sub')
 
    for (const subComment of comments) {
       makeCollapsableSub(subComment)
    }
 
-   var root = commentThread.querySelector('.comment-wrapper')
+   const root = commentThread.querySelector('.comment-wrapper')
    if (root && comments.length > 0) {
       makeCollapsableRoot(root)
    }
 }
 
-makeCollapsableSub = (elem) => {
+const makeCollapsableSub = (elem) => {
    elem.style.maxHeight = elem.scrollHeight + 'px'
    elem.style.transition = `max-height ${OPTIONS.animationSpeed}ms linear`
-   article = elem.querySelector(".comment")
+   let article = elem.querySelector(".comment")
    article.addEventListener('click',
       collapseThreadFromSub
    )
 }
 
-makeCollapsableRoot = (elem) => {
+const makeCollapsableRoot = (elem) => {
    const oldProfileLink = elem.querySelector(".comment-avatar")
    elem.style.transition = `filter ${OPTIONS.animationSpeed}ms linear`
-   content = elem.querySelector(".read-more")
+   let content = elem.querySelector(".read-more")
    content.style.transition = `all ${OPTIONS.animationSpeed}ms linear`
    const newProfileLink = `<div class="collapse-wrapper">${oldProfileLink.outerHTML}<div class="comment-avatar collapse-button"/></div>`
    oldProfileLink.remove()
-   art = elem.querySelector(".comment")
+   let art = elem.querySelector(".comment")
    art.insertAdjacentHTML("afterbegin", newProfileLink)
-   button = elem.querySelector(".collapse-button")
+   let button = elem.querySelector(".collapse-button")
    button.style.transition = `transform ${OPTIONS.animationSpeed}ms linear`
    button.addEventListener('click', (event)=> {
       thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
@@ -65,12 +66,12 @@ makeCollapsableRoot = (elem) => {
       else collapseThread(thread)
    })
 
-   image = elem.querySelector(".comment-media")      
+   let image = elem.querySelector(".comment-media")      
    if (image) {
       image.style.maxHeight = image.scrollHeight + 'px' 
       image.style.transition = `max-height ${OPTIONS.animationSpeed}ms linear`
    }
-   footer = elem.querySelector(".comment-reply")      
+   let footer = elem.querySelector(".comment-reply")      
    if (footer) {
       footer.style.transition = `max-height ${OPTIONS.animationSpeed}ms linear`
       footer.style.maxHeight = footer.scrollHeight + 'px'
@@ -78,7 +79,7 @@ makeCollapsableRoot = (elem) => {
    }
 }
 
-dispatchChanges = (mutationList) => {
+const dispatchChanges = (mutationList) => {
    for (record of mutationList) {
       if (record.type == 'childList') {
          for (const child of record.addedNodes) {
@@ -118,31 +119,29 @@ dispatchChanges = (mutationList) => {
    }
 }
 
-newSubComment = (subcom) => {
+const newSubComment = (subcom) => {
    makeCollapsableSub(subcom.firstChild)
-   root = findParent(subcom, (e) => {return e.parentElement.className == "comments"})
-   root = root.querySelector('.comment-wrapper')
-   button = root.querySelector(".collapse-button")
+   const root = findParent(subcom, (e) => {return e.parentElement.className == "comments"}).querySelector('.comment-wrapper')
+   const button = root.querySelector(".collapse-button")
    if (! button) {
       makeCollapsableRoot(root)
    }
 }
 
-popup = (element) => {
+const popup = (element) => {
    element = findParent(element, (e) => {return e.className == "comment-wrapper comment-sub"})
    if (element)
       element.style.overflow = 'visible'
 }
 
-popdown = (element) => {
+const popdown = (element) => {
    element = findParent(element, (e) => {return e.className == "comment-wrapper comment-sub"})
    if (element)
       element.style.overflow = ''
 }
 
-adjustHeightFor = (element) => {
-   while (element && element.className != "comment-wrapper comment-sub")//FIXME
-      element = element.parentElement
+const adjustHeightFor = (element) => {
+   element = findParent(element, (e) => {return element.className == "comment-wrapper comment-sub"})
    if (!element) return
    element.style.transition = "max-height 0s ease 0s"
    element.style.maxHeight = element.scrollHeight + 'px'
@@ -150,9 +149,9 @@ adjustHeightFor = (element) => {
    element.style.transition = `max-height ${OPTIONS.animationSpeed}ms ease 0s`
 }
 
-collapseThread = async (thread) => {
+const collapseThread = async (thread) => {
    thread.setAttribute('collapsed','')
-   comments = thread.querySelectorAll('.comment-sub')
+   const comments = thread.querySelectorAll('.comment-sub')
    collapseRoot(thread.querySelector(".comment-wrapper"))
    for (const subComment of comments) {
       subComment.style.maxHeight = '0px'
@@ -160,13 +159,13 @@ collapseThread = async (thread) => {
    }
 }
 
-collapseRoot = (root) => {
-   button = root.querySelector(".collapse-button")
+const collapseRoot = (root) => {
+   let button = root.querySelector(".collapse-button")
    button.style.transform = 'rotate(-90deg)'
 
-   content = root.querySelector(".read-more")
-   footer = root.querySelector(".comment-reply")
-   image = root.querySelector(".comment-media")
+   let content = root.querySelector(".read-more")
+   let footer = root.querySelector(".comment-reply")
+   let image = root.querySelector(".comment-media")
 
    footer.style.maxHeight = '0px'
    if (image) image.style.maxHeight = '0px'
@@ -177,23 +176,23 @@ collapseRoot = (root) => {
    if (OPTIONS.fade) root.style.filter = "brightness(0.7)"
 }
 
-expandThread = async (thread) => {
+const expandThread = async (thread) => {
    thread.removeAttribute('collapsed')
-   comments = thread.querySelectorAll('.comment-sub')
+   const comments = thread.querySelectorAll('.comment-sub')
    expandRoot(thread.querySelector(".comment-wrapper"))
    for (const subComment of comments) {
-      await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
       subComment.style.maxHeight = subComment.scrollHeight + 'px'
+      if (OPTIONS.animationSpeed > 0 ) await new Promise(r => setTimeout(r, 5)) // add some "weight" for longer thread collapse 
    }
 }
 
-expandRoot = (root) => {
-   button = root.querySelector(".collapse-button")
+const expandRoot = (root) => {
+   let button = root.querySelector(".collapse-button")
    button.style.transform = ''
 
-   content = root.querySelector(".read-more")
-   footer = root.querySelector(".comment-reply")
-   image = root.querySelector(".comment-media")
+   let content = root.querySelector(".read-more")
+   let footer = root.querySelector(".comment-reply")
+   let image = root.querySelector(".comment-media")
 
    if(content.parentElement.querySelector(".read-more-button")) {
       content.style.maxHeight = "300px"
@@ -210,13 +209,14 @@ expandRoot = (root) => {
 /**
  * Clicking on subcomment indendt marker/line
  */
-collapseThreadFromSub = (event) => {
-   if (event.offsetX < 5 && event.currentTarget == event.target)
-      thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
+const collapseThreadFromSub = (event) => {
+   if (event.offsetX < 5 && event.currentTarget == event.target) {
+      const thread = findParent(event.currentTarget, (e) => {return e.parentElement.className == "comments"})
       collapseThread(thread)
+   }
 }
 
-findParent = (startElement, stopCondition) => {
+const findParent = (startElement, stopCondition) => {
    while (startElement && !stopCondition(startElement))
       startElement = startElement.parentElement
    return startElement
